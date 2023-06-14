@@ -2,16 +2,40 @@ import { NextResponse } from "next/server";
 const { Telegraf } = require("telegraf");
 
 export async function GET(request) {
+  const res = await fetch("https://api-colombia.com/api/v1/Department", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await res.json();
+
   const bot = new Telegraf("6158245428:AAFdpU5fqscxDJQ4J6907TgxWyooqXioXvU");
   bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
-  bot.start((ctx) => ctx.reply("Welcome"));
+
+  bot.start((ctx) => ctx.reply("Bievenidos al bot de Hunty!"));
   bot.help((ctx) =>
     ctx.reply("Escribe el nombre de un departamento (Ejemplo: Antioquia)")
   );
-  bot.on("sticker", (ctx) => ctx.reply("👍"));
   bot.on("text", (ctx) => {
-    // Explicit usage
-    ctx.telegram.sendMessage(
+    const depto = ctx.message.text;
+
+    const result = data.find((row) => row.name === depto);
+
+    if (!result) {
+      bot.telegram.sendMessage(
+        ctx.message.chat.id,
+        `No se encontraron resultados para *${depto}*, verifica que esté bien escrito.`
+      );
+    } else {
+      bot.telegram.sendMessage(
+        ctx.message.chat.id,
+        `Excelente, aquí tienes la información de ${result.name}:`
+      );
+
+      bot.telegram.sendMessage(ctx.message.chat.id, result.description);
+    }
+
+    /*ctx.telegram.sendMessage(
       ctx.message.chat.id,
       `Has elegido ${ctx.message.text}`
     );
@@ -27,31 +51,12 @@ export async function GET(request) {
     );
 
     // Using context shortcut
-    //ctx.reply(`Hello ${ctx.state.role}`);
-  });
-
-  bot.on("text", (ctx) => {
-    // Explicit usage
-    ctx.telegram.sendMessage(ctx.message.chat.id, `Hello ${ctx.state.role}`);
-
-    // Using context shortcut
-    ctx.reply(`Hello ${ctx.state.role}`);
+    //ctx.reply(`Hello ${ctx.state.role}`);*/
   });
 
   bot.launch();
 
-  // Enable graceful stop
-  process.once("SIGINT", () => bot.stop("SIGINT"));
-  process.once("SIGTERM", () => bot.stop("SIGTERM"));
-
-  const res = await fetch("https://api-colombia.com/api/v1/Department", {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const data = await res.json();
-
-  return NextResponse.json({ data });
+  //return NextResponse.json({ data });
 }
 /*export default async function handler(req, res) {
   try {
