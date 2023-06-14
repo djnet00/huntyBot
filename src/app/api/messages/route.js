@@ -15,9 +15,9 @@ export async function GET(request) {
   let message = "";
 
   const bot = new Telegraf(process.env.BOT_TOKEN);
-  bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
+  await bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
 
-  bot.telegram.setMyCommands([
+  await bot.telegram.setMyCommands([
     { command: "/start", description: "Iniciar el bot" },
     { command: "/help", description: "Solicitar ayuda" },
   ]);
@@ -39,7 +39,7 @@ export async function GET(request) {
       },
     });
 
-    const result = data.find((row) => row.name === depto);
+    const result = await data.find((row) => row.name === depto);
 
     if (!result) {
       message = `❌ No se encontraron resultados para el departamento *${depto}*, verifica que esté bien escrito.`;
@@ -50,9 +50,9 @@ export async function GET(request) {
       );
     } else {
       message = `✅ Excelente, aquí tienes la información de ${result.name}:`;
-      bot.telegram.sendMessage(ctx.message.chat.id, message);
+      await bot.telegram.sendMessage(ctx.message.chat.id, message);
 
-      bot.telegram.sendMessage(ctx.message.chat.id, result.description);
+      await bot.telegram.sendMessage(ctx.message.chat.id, result.description);
     }
 
     await prisma.message.create({
@@ -66,7 +66,7 @@ export async function GET(request) {
     });
   });
 
-  bot.launch();
+  await bot.launch();
 
   const messages = await prisma.message.findMany();
 
