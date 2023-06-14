@@ -31,45 +31,43 @@ export async function GET(request) {
     ctx.reply("ℹ️ Escribe el nombre de un departamento (Ejemplo: Antioquia)")
   );
   bot.on("text", async (ctx) => {
-    if (ctx.message.chat.id > 0) {
-      const depto = ctx.message.text;
+    const depto = ctx.message.text;
 
-      await prisma.message.create({
-        data: {
-          username: ctx.from.username,
-          messageId: ctx.message.message_id,
-          chatId: ctx.message.chat.id,
-          message: depto,
-          type: "USER",
-        },
-      });
+    await prisma.message.create({
+      data: {
+        username: ctx.from.username,
+        messageId: ctx.message.message_id,
+        chatId: ctx.from.id,
+        message: depto,
+        type: "USER",
+      },
+    });
 
-      const result = data.find((row) => row.name === depto);
+    const result = data.find((row) => row.name === depto);
 
-      if (!result) {
-        messageText = `❌ No se encontraron resultados para el departamento *${depto}*, verifica que esté bien escrito.`;
-        bot.telegram.sendMessage(ctx.message.chat.id, message);
-        bot.telegram.sendMessage(
-          ctx.message.chat.id,
-          `ℹ️ Si necesitas ayuda puedes solicitarla escribiendo /help.`
-        );
-      } else {
-        messageText = `✅ Excelente, aquí tienes la información de ${result.name}:`;
-        bot.telegram.sendMessage(ctx.message.chat.id, message);
+    if (!result) {
+      messageText = `❌ No se encontraron resultados para el departamento *${depto}*, verifica que esté bien escrito.`;
+      bot.telegram.sendMessage(ctx.message.chat.id, messageText);
+      bot.telegram.sendMessage(
+        ctx.message.chat.id,
+        `ℹ️ Si necesitas ayuda puedes solicitarla escribiendo /help.`
+      );
+    } else {
+      messageText = `✅ Excelente, aquí tienes la información de ${result.name}:`;
+      bot.telegram.sendMessage(ctx.message.chat.id, messageText);
 
-        bot.telegram.sendMessage(ctx.message.chat.id, result.description);
-      }
-
-      await prisma.message.create({
-        data: {
-          username: ctx.from.username,
-          messageId: ctx.message.message_id,
-          chatId: ctx.message.chat.id,
-          message: messageText,
-          type: "BOT",
-        },
-      });
+      bot.telegram.sendMessage(ctx.message.chat.id, result.description);
     }
+
+    await prisma.message.create({
+      data: {
+        username: ctx.from.username,
+        messageId: ctx.message.message_id,
+        chatId: ctx.message.chat.id,
+        message: messageText,
+        type: "BOT",
+      },
+    });
   });
 
   bot.launch();
