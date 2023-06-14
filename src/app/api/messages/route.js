@@ -12,9 +12,9 @@ export async function GET(request) {
   const bot = new Telegraf("6158245428:AAFdpU5fqscxDJQ4J6907TgxWyooqXioXvU");
   bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
 
-  bot.start((ctx) => ctx.reply("Bienvenidos al bot de Hunty!"));
+  bot.start((ctx) => ctx.reply("ℹ️ Bienvenidos al bot de Hunty!"));
   bot.help((ctx) =>
-    ctx.reply("Escribe el nombre de un departamento (Ejemplo: Antioquia)")
+    ctx.reply("ℹ️ Escribe el nombre de un departamento (Ejemplo: Antioquia)")
   );
   bot.on("text", (ctx) => {
     const depto = ctx.message.text;
@@ -24,12 +24,12 @@ export async function GET(request) {
     if (!result) {
       bot.telegram.sendMessage(
         ctx.message.chat.id,
-        `No se encontraron resultados para *${depto}*, verifica que esté bien escrito.`
+        `❌ No se encontraron resultados para el departamento *${depto}*, verifica que esté bien escrito.`
       );
     } else {
       bot.telegram.sendMessage(
         ctx.message.chat.id,
-        `Excelente, aquí tienes la información de ${result.name}:`
+        `✅ Excelente, aquí tienes la información de ${result.name}:`
       );
 
       bot.telegram.sendMessage(ctx.message.chat.id, result.description);
