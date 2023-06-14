@@ -26,6 +26,10 @@ export async function GET(request) {
         ctx.message.chat.id,
         `❌ No se encontraron resultados para el departamento *${depto}*, verifica que esté bien escrito.`
       );
+      bot.telegram.sendMessage(
+        ctx.message.chat.id,
+        `ℹ️ Si necesitas ayuda puedes solicitarla escribiendo /help.`
+      );
     } else {
       bot.telegram.sendMessage(
         ctx.message.chat.id,
