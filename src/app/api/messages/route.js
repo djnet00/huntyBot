@@ -3,7 +3,36 @@ const { Telegraf } = require("telegraf");
 
 export async function GET(request) {
   const bot = new Telegraf("6158245428:AAFdpU5fqscxDJQ4J6907TgxWyooqXioXvU");
-  bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
+  //bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
+  bot.start((ctx) => ctx.reply("Welcome"));
+  bot.help((ctx) =>
+    ctx.reply("Escribe el nombre de un departamento (Ejemplo: Antioquia)")
+  );
+  bot.on("sticker", (ctx) => ctx.reply("👍"));
+  bot.on("text", (ctx) => {
+    // Explicit usage
+    ctx.telegram.sendMessage(
+      ctx.message.chat.id,
+      `Has elegido ${ctx.message.text}`
+    );
+
+    // Using context shortcut
+    //ctx.reply(`Hello ${ctx.state.role}`);
+  });
+
+  bot.on("text", (ctx) => {
+    // Explicit usage
+    ctx.telegram.sendMessage(ctx.message.chat.id, `Hello ${ctx.state.role}`);
+
+    // Using context shortcut
+    ctx.reply(`Hello ${ctx.state.role}`);
+  });
+
+  bot.launch();
+
+  // Enable graceful stop
+  process.once("SIGINT", () => bot.stop("SIGINT"));
+  process.once("SIGTERM", () => bot.stop("SIGTERM"));
 
   const res = await fetch("https://api-colombia.com/api/v1/Department", {
     headers: {
