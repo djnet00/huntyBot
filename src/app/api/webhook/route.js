@@ -2,6 +2,15 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 const { Telegraf } = require("telegraf");
 
+export async function GET(request) {
+  const bot = new Telegraf(process.env.BOT_TOKEN);
+  await bot.telegram.deleteWebhook();
+  await bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/webhook");
+  await bot.telegram.getWebhookInfo().then(console.log);
+
+  return NextResponse.json({ message: "Webhook setted" });
+}
+
 export async function POST(request) {
   const res = await fetch("https://api-colombia.com/api/v1/Department", {
     headers: {
