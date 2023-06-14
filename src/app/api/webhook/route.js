@@ -31,11 +31,19 @@ export async function POST(request) {
   bot.on("text", async (ctx) => {
     const depto = ctx.message.text;
 
+    let chatId = 0;
+
+    if (ctx.message.chat?.id > 0) {
+      chatId = ctx.message.chat.id;
+    } else {
+      chatId = ctx.from.id;
+    }
+
     await prisma.message.create({
       data: {
         username: ctx.from.username,
         messageId: ctx.message.message_id,
-        chatId: ctx.from.id,
+        chatId: chatId,
         message: depto,
         type: "USER",
       },
@@ -45,23 +53,20 @@ export async function POST(request) {
 
     if (!result) {
       messageText = `❌ No se encontraron resultados para el departamento *${depto}*, verifica que esté bien escrito.`;
-      bot.telegram.sendMessage(ctx.message.chat.id, messageText);
-      bot.telegram.sendMessage(
-        ctx.message.chat.id,
-        `ℹ️ Si necesitas ayuda puedes solicitarla escribiendo /help.`
-      );
+      ctx.reply(messageText);
+      ctx.reply(`ℹ️ Si necesitas ayuda puedes solicitarla escribiendo /help.`);
     } else {
       messageText = `✅ Excelente, aquí tienes la información de ${result.name}:`;
-      bot.telegram.sendMessage(ctx.message.chat.id, messageText);
+      ctx.reply(messageText);
 
-      bot.telegram.sendMessage(ctx.message.chat.id, result.description);
+      ctx.reply(result.description);
     }
 
     await prisma.message.create({
       data: {
         username: ctx.from.username,
         messageId: ctx.message.message_id,
-        chatId: ctx.message.chat.id,
+        chatId: chatId,
         message: messageText,
         type: "BOT",
       },
