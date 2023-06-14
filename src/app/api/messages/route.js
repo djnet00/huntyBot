@@ -12,21 +12,6 @@ export async function GET(request) {
 
   const prisma = new PrismaClient();
 
-  const result = await prisma.message.create({
-    data: {
-      username: "Hunty",
-      messageId: "1",
-      chatId: "1",
-      message:
-        "Hola, bienvenido al bot de Hunty, escribe el nombre de un departamento (Ejemplo: Antioquia)",
-      type: "BOT",
-    },
-  });
-
-  const messages = await prisma.message.findMany();
-
-  return NextResponse.json({ messages });
-
   let message = "";
 
   const bot = new Telegraf(process.env.BOT_TOKEN);
@@ -83,7 +68,9 @@ export async function GET(request) {
 
   bot.launch();
 
-  return NextResponse.json({ message: "ok" });
+  const messages = await prisma.message.findMany();
+
+  return NextResponse.json({ messages });
 }
 
 export async function POST(request) {
