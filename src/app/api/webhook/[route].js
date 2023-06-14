@@ -85,13 +85,11 @@ export async function POST(request) {
   bot.launch({
     webhook: {
       // Public domain for webhook; e.g.: example.com
-      domain: "https://hunty-bot.vercel.app/api/webhook",
+      domain: "https://hunty-bot.vercel.app",
+      hookPath: "/api/webhook",
+      secretToken: "",
     },
   });
-
-  // Enable graceful stop
-  process.once("SIGINT", () => bot.stop("SIGINT"));
-  process.once("SIGTERM", () => bot.stop("SIGTERM"));
 
   return NextResponse.json({ message: null });
 }
