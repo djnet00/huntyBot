@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 const { Telegraf } = require("telegraf");
+const { message } = require("telegraf/filters");
 
 export async function GET(request) {
   const bot = new Telegraf(process.env.BOT_TOKEN);
-  await bot.telegram.deleteWebhook();
-  await bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/webhook");
-  await bot.telegram.getWebhookInfo().then(console.log);
+  bot.start((ctx) => ctx.reply("ℹ️ Bienvenidos al bot de Hunty!"));
 
   return NextResponse.json({ message: "Webhook setted" });
 }
@@ -37,7 +36,7 @@ export async function POST(request) {
   bot.help((ctx) =>
     ctx.reply("ℹ️ Escribe el nombre de un departamento (Ejemplo: Antioquia)")
   );
-  bot.on("text", async (ctx) => {
+  bot.on(message("text"), async (ctx) => {
     const depto = ctx.message.text;
 
     let chatId = 0;
