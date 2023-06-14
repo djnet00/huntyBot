@@ -16,7 +16,7 @@ export async function GET(request) {
 
   const bot = new Telegraf(process.env.BOT_TOKEN);
 
-  bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
+  //bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
 
   //return NextResponse.json({ message: "Webhook setted" });
 
@@ -95,7 +95,7 @@ export async function POST(request) {
 
   const bot = new Telegraf(process.env.BOT_TOKEN);
 
-  bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
+  //bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
 
   //return NextResponse.json({ message: "Webhook setted" });
 
