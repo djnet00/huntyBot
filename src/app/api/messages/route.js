@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
 const { Telegraf } = require("telegraf");
+
+const prisma = new PrismaClient();
 
 export async function GET(request) {
   const res = await fetch("https://api-colombia.com/api/v1/Department", {
@@ -9,7 +12,9 @@ export async function GET(request) {
   });
   const data = await res.json();
 
-  const bot = new Telegraf("6158245428:AAFdpU5fqscxDJQ4J6907TgxWyooqXioXvU");
+  let message = "";
+
+  const bot = new Telegraf(process.env.BOT_TOKEN);
   bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
 
   bot.telegram.setMyCommands([
@@ -21,28 +26,44 @@ export async function GET(request) {
   bot.help((ctx) =>
     ctx.reply("ℹ️ Escribe el nombre de un departamento (Ejemplo: Antioquia)")
   );
-  bot.on("text", (ctx) => {
+  bot.on("text", async (ctx) => {
     const depto = ctx.message.text;
+
+    await prisma.message.create({
+      data: {
+        username: ctx.from.username,
+        messageId: ctx.message.message_id,
+        chatId: ctx.message.chat.id,
+        message: depto,
+        type: "USER",
+      },
+    });
 
     const result = data.find((row) => row.name === depto);
 
     if (!result) {
-      bot.telegram.sendMessage(
-        ctx.message.chat.id,
-        `❌ No se encontraron resultados para el departamento *${depto}*, verifica que esté bien escrito.`
-      );
+      message = `❌ No se encontraron resultados para el departamento *${depto}*, verifica que esté bien escrito.`;
+      bot.telegram.sendMessage(ctx.message.chat.id, message);
       bot.telegram.sendMessage(
         ctx.message.chat.id,
         `ℹ️ Si necesitas ayuda puedes solicitarla escribiendo /help.`
       );
     } else {
-      bot.telegram.sendMessage(
-        ctx.message.chat.id,
-        `✅ Excelente, aquí tienes la información de ${result.name}:`
-      );
+      message = `✅ Excelente, aquí tienes la información de ${result.name}:`;
+      bot.telegram.sendMessage(ctx.message.chat.id, message);
 
       bot.telegram.sendMessage(ctx.message.chat.id, result.description);
     }
+
+    await prisma.message.create({
+      data: {
+        username: ctx.from.username,
+        messageId: ctx.message.message_id,
+        chatId: ctx.message.chat.id,
+        message: message,
+        type: "BOT",
+      },
+    });
   });
 
   bot.launch();
@@ -58,7 +79,7 @@ export async function POST(request) {
   });
   const data = await res.json();
 
-  const bot = new Telegraf("6158245428:AAFdpU5fqscxDJQ4J6907TgxWyooqXioXvU");
+  const bot = new Telegraf(process.env.BOT_TOKEN);
   bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
 
   bot.telegram.setMyCommands([
