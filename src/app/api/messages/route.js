@@ -2,17 +2,17 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 const { Telegraf } = require("telegraf");
 
-const prisma = new PrismaClient();
-
 export async function GET(request) {
-  const res = await fetch("https://api-colombia.com/api/v1/Department", {
+  /*const res = await fetch("https://api-colombia.com/api/v1/Department", {
     headers: {
       "Content-Type": "application/json",
     },
   });
-  const data = await res.json();
+  const data = await res.json();*/
 
-  await prisma.messages.create({
+  const prisma = new PrismaClient();
+
+  const result = await prisma.message.create({
     data: {
       username: "Hunty",
       messageId: "1",
@@ -22,6 +22,10 @@ export async function GET(request) {
       type: "BOT",
     },
   });
+
+  const messages = await prisma.message.findMany();
+
+  return NextResponse.json({ messages });
 
   let message = "";
 
@@ -40,7 +44,7 @@ export async function GET(request) {
   bot.on("text", async (ctx) => {
     const depto = ctx.message.text;
 
-    await prisma.messages.create({
+    await prisma.message.create({
       data: {
         username: ctx.from.username,
         messageId: ctx.message.message_id,
@@ -66,7 +70,7 @@ export async function GET(request) {
       bot.telegram.sendMessage(ctx.message.chat.id, result.description);
     }
 
-    await prisma.messages.create({
+    await prisma.message.create({
       data: {
         username: ctx.from.username,
         messageId: ctx.message.message_id,

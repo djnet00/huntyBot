@@ -7,13 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model messages {
+model Message {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  username  String
-  chatId    String
-  messageId String
-  message   String
-  type      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  chatId    String?
+  createdAt DateTime @default(now()) @db.Date
+  message   String?
+  messageId String?
+  type      String?
+  updatedAt DateTime @default(now()) @db.Date
+  username  String?
 }
