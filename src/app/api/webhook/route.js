@@ -16,7 +16,7 @@ export async function GET(request) {
 
   const bot = new Telegraf(process.env.BOT_TOKEN);
 
-  //bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
+  await bot.telegram.getWebhookInfo().then(console.log);
 
   //return NextResponse.json({ message: "Webhook setted" });
 
