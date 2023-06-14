@@ -31,6 +31,8 @@ export async function POST(request) {
     { command: "/help", description: "Solicitar ayuda" },
   ]);*/
 
+  bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/webhook");
+
   bot.start((ctx) => ctx.reply("ℹ️ Bienvenidos al bot de Hunty!"));
 
   bot.help((ctx) =>
