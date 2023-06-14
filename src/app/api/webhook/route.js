@@ -16,8 +16,6 @@ export async function POST(request) {
 
   const bot = new Telegraf(process.env.BOT_TOKEN);
 
-  await bot.telegram.getWebhookInfo().then(console.log);
-
   //return NextResponse.json({ message: "Webhook setted" });
 
   /*await bot.telegram.setMyCommands([
