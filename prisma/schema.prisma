@@ -9,10 +9,10 @@ datasource db {
 
 model Message {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  chatId    String?
+  chatId    Int?
   createdAt DateTime @default(now()) @db.Date
   message   String?
-  messageId String?
+  messageId Int?
   type      String?
   updatedAt DateTime @default(now()) @db.Date
   username  String?

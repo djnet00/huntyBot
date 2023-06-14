@@ -12,7 +12,7 @@ export async function GET(request) {
 
   const prisma = new PrismaClient();
 
-  let message = "";
+  let messageText = "";
 
   const bot = new Telegraf(process.env.BOT_TOKEN);
 
@@ -46,14 +46,14 @@ export async function GET(request) {
     const result = await data.find((row) => row.name === depto);
 
     if (!result) {
-      message = `❌ No se encontraron resultados para el departamento *${depto}*, verifica que esté bien escrito.`;
+      messageText = `❌ No se encontraron resultados para el departamento *${depto}*, verifica que esté bien escrito.`;
       bot.telegram.sendMessage(ctx.message.chat.id, message);
       bot.telegram.sendMessage(
         ctx.message.chat.id,
         `ℹ️ Si necesitas ayuda puedes solicitarla escribiendo /help.`
       );
     } else {
-      message = `✅ Excelente, aquí tienes la información de ${result.name}:`;
+      messageText = `✅ Excelente, aquí tienes la información de ${result.name}:`;
       await bot.telegram.sendMessage(ctx.message.chat.id, message);
 
       await bot.telegram.sendMessage(ctx.message.chat.id, result.description);
@@ -64,7 +64,7 @@ export async function GET(request) {
         username: ctx.from.username,
         messageId: ctx.message.message_id,
         chatId: ctx.message.chat.id,
-        message: message,
+        message: messageText,
         type: "BOT",
       },
     });
