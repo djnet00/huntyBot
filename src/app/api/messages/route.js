@@ -29,7 +29,7 @@ export async function GET(request) {
   bot.on("text", async (ctx) => {
     const depto = ctx.message.text;
 
-    await prisma.message.create({
+    await prisma.messages.create({
       data: {
         username: ctx.from.username,
         messageId: ctx.message.message_id,
@@ -55,7 +55,7 @@ export async function GET(request) {
       bot.telegram.sendMessage(ctx.message.chat.id, result.description);
     }
 
-    await prisma.message.create({
+    await prisma.messages.create({
       data: {
         username: ctx.from.username,
         messageId: ctx.message.message_id,
