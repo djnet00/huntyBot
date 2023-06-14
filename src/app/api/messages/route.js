@@ -12,6 +12,17 @@ export async function GET(request) {
   });
   const data = await res.json();
 
+  await prisma.messages.create({
+    data: {
+      username: "Hunty",
+      messageId: "1",
+      chatId: "1",
+      message:
+        "Hola, bienvenido al bot de Hunty, escribe el nombre de un departamento (Ejemplo: Antioquia)",
+      type: "BOT",
+    },
+  });
+
   let message = "";
 
   const bot = new Telegraf(process.env.BOT_TOKEN);
