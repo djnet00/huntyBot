@@ -12,6 +12,11 @@ export async function GET(request) {
   const bot = new Telegraf("6158245428:AAFdpU5fqscxDJQ4J6907TgxWyooqXioXvU");
   bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
 
+  bot.telegram.setMyCommands([
+    { command: "/start", description: "Iniciar el bot" },
+    { command: "/help", description: "Solicitar ayuda" },
+  ]);
+
   bot.start((ctx) => ctx.reply("ℹ️ Bienvenidos al bot de Hunty!"));
   bot.help((ctx) =>
     ctx.reply("ℹ️ Escribe el nombre de un departamento (Ejemplo: Antioquia)")
