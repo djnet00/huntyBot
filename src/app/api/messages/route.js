@@ -3,7 +3,7 @@ const { Telegraf } = require("telegraf");
 
 export async function GET(request) {
   const bot = new Telegraf("6158245428:AAFdpU5fqscxDJQ4J6907TgxWyooqXioXvU");
-  bot.telegram.setWebhook("https://localhost:3000/api/messages");
+  bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
 
   const res = await fetch("https://api-colombia.com/api/v1/Department", {
     headers: {
