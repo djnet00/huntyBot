@@ -38,40 +38,58 @@ export async function GET(request) {
 
       bot.telegram.sendMessage(ctx.message.chat.id, result.description);
     }
-
-    /*ctx.telegram.sendMessage(
-      ctx.message.chat.id,
-      `Has elegido ${ctx.message.text}`
-    );
-
-    ctx.telegram.sendMessage(
-      ctx.message.chat.id,
-      `El ChatId es: ${ctx.message.chat.id}`
-    );
-
-    ctx.telegram.sendMessage(
-      ctx.message.chat.id,
-      `El FromId es: ${ctx.message.from.id}`
-    );
-
-    // Using context shortcut
-    //ctx.reply(`Hello ${ctx.state.role}`);*/
   });
 
   bot.launch();
 
   return NextResponse.json({ message: "ok" });
 }
-/*export default async function handler(req, res) {
-  try {
-    if (req.method === "POST") {
-      const result = await fetch("https://api-colombia.com/api/v1/Department");
-      res.status(200).json(result.json());
+
+export async function POST(request) {
+  const res = await fetch("https://api-colombia.com/api/v1/Department", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await res.json();
+
+  const bot = new Telegraf("6158245428:AAFdpU5fqscxDJQ4J6907TgxWyooqXioXvU");
+  bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
+
+  bot.telegram.setMyCommands([
+    { command: "/start", description: "Iniciar el bot" },
+    { command: "/help", description: "Solicitar ayuda" },
+  ]);
+
+  bot.start((ctx) => ctx.reply("ℹ️ Bienvenidos al bot de Hunty!"));
+  bot.help((ctx) =>
+    ctx.reply("ℹ️ Escribe el nombre de un departamento (Ejemplo: Antioquia)")
+  );
+  bot.on("text", (ctx) => {
+    const depto = ctx.message.text;
+
+    const result = data.find((row) => row.name === depto);
+
+    if (!result) {
+      bot.telegram.sendMessage(
+        ctx.message.chat.id,
+        `❌ No se encontraron resultados para el departamento *${depto}*, verifica que esté bien escrito.`
+      );
+      bot.telegram.sendMessage(
+        ctx.message.chat.id,
+        `ℹ️ Si necesitas ayuda puedes solicitarla escribiendo /help.`
+      );
     } else {
-      const result = await fetch("https://api-colombia.com/api/v1/Department");
-      res.status(200).json(result.json());
+      bot.telegram.sendMessage(
+        ctx.message.chat.id,
+        `✅ Excelente, aquí tienes la información de ${result.name}:`
+      );
+
+      bot.telegram.sendMessage(ctx.message.chat.id, result.description);
     }
-  } catch (err) {
-    res.status(500).json({ error: "failed to load data" });
-  }
-}*/
+  });
+
+  bot.launch();
+
+  return NextResponse.json({ message: "ok" });
+}
