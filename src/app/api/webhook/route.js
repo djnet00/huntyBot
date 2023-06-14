@@ -26,12 +26,12 @@ export async function POST(request) {
 
   //return NextResponse.json({ message: "Webhook setted" });
 
-  /*await bot.telegram.setMyCommands([
+  await bot.telegram.setMyCommands([
     { command: "/start", description: "Iniciar el bot" },
     { command: "/help", description: "Solicitar ayuda" },
-  ]);*/
+  ]);
 
-  bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/webhook");
+  //bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/webhook");
 
   bot.start((ctx) => ctx.reply("ℹ️ Bienvenidos al bot de Hunty!"));
 
@@ -84,7 +84,7 @@ export async function POST(request) {
   });
 
   // Start webhook via launch method (preferred)
-  bot.launch();
+  await bot.launch();
 
   return NextResponse.json({ message: null });
 }
