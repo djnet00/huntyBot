@@ -12,7 +12,7 @@ export async function GET(request) {
   const bot = new Telegraf("6158245428:AAFdpU5fqscxDJQ4J6907TgxWyooqXioXvU");
   bot.telegram.setWebhook("https://hunty-bot.vercel.app/api/messages");
 
-  bot.start((ctx) => ctx.reply("Bievenidos al bot de Hunty!"));
+  bot.start((ctx) => ctx.reply("Bienvenidos al bot de Hunty!"));
   bot.help((ctx) =>
     ctx.reply("Escribe el nombre de un departamento (Ejemplo: Antioquia)")
   );
@@ -56,7 +56,7 @@ export async function GET(request) {
 
   bot.launch();
 
-  //return NextResponse.json({ data });
+  return NextResponse.json({ message: "ok" });
 }
 /*export default async function handler(req, res) {
   try {
