@@ -16,6 +16,16 @@ export async function GET(request) {
       `Has elegido ${ctx.message.text}`
     );
 
+    ctx.telegram.sendMessage(
+      ctx.message.chat.id,
+      `El ChatId es: ${ctx.message.chat.id}`
+    );
+
+    ctx.telegram.sendMessage(
+      ctx.message.chat.id,
+      `El FromId es: ${ctx.message.from.id}`
+    );
+
     // Using context shortcut
     //ctx.reply(`Hello ${ctx.state.role}`);
   });
