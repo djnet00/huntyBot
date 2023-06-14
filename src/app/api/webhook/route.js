@@ -82,14 +82,7 @@ export async function POST(request) {
   });
 
   // Start webhook via launch method (preferred)
-  bot.launch({
-    webhook: {
-      // Public domain for webhook; e.g.: example.com
-      domain: "https://hunty-bot.vercel.app",
-      hookPath: "/api/webhook",
-      secretToken: "",
-    },
-  });
+  bot.launch();
 
   return NextResponse.json({ message: null });
 }
