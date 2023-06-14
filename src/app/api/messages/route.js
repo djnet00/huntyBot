@@ -3,12 +3,12 @@ import { PrismaClient } from "@prisma/client";
 const { Telegraf } = require("telegraf");
 
 export async function GET(request) {
-  /*const res = await fetch("https://api-colombia.com/api/v1/Department", {
+  const res = await fetch("https://api-colombia.com/api/v1/Department", {
     headers: {
       "Content-Type": "application/json",
     },
   });
-  const data = await res.json();*/
+  const data = await res.json();
 
   const prisma = new PrismaClient();
 
